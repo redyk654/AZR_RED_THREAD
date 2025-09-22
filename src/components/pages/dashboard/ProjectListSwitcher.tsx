@@ -45,15 +45,16 @@ const ProjectListSwitcher: React.FC<ProjectListSwitcherProps> = ({
               backgroundColor: `${COLORS.PRIMARY}10`,
             },
           },
+          height: 35
         }}
       >
-        <ToggleButton value="card" aria-label="card view">
+        <ToggleButton value="card" aria-label="card view" sx={{ m: 0 }}>
           <GridView sx={{ mr: 1 }} />
           Cartes
         </ToggleButton>
-        <ToggleButton value="list" aria-label="list view">
+        <ToggleButton value="list" aria-label="list view" sx={{ m: 0 }}>
           <ViewList sx={{ mr: 1 }} />
-          Liste
+          Tableau
         </ToggleButton>
       </ToggleButtonGroup>
     </Box>

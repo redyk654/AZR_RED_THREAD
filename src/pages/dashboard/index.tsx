@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Grid, Pagination, Dialog } from "@mui/material";
+import { Button, Grid, Pagination, Dialog, Box } from "@mui/material";
 import { getPaginatedProjects, createProject, updateProject, deleteProject } from "@/redux/actions/project/project.action";
 import ProjectCard from "@/components/pages/dashboard/ProjectCard";
 import ProjectTable from "@/components/pages/dashboard/ProjectTable";
@@ -25,7 +25,7 @@ export default function Dashboard() {
   const [editProject, setEditProject] = useState<UpdateProjectDto | null>(null);
   const [confirmDelete, setConfirmDelete] = useState({ open: false, projectId: 0 });
 
-  const pageSize = 2;
+  const pageSize = 4;
 
   useEffect(() => {
     dispatch(getPaginatedProjects(page, pageSize));
@@ -77,9 +77,11 @@ export default function Dashboard() {
   return (
     <div>
       <ProjectListSwitcher viewMode={viewMode} onChange={setViewMode} />
-      <Button sx={{ bgcolor: "#1b365f", color: "#fff", ml: 2 }} onClick={() => setOpenForm(true)}>
-        Nouveau Projet
-      </Button>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start', m: 2 }}>
+        <Button sx={{ bgcolor: "#1b365f", color: "#fff", ml: 2 }} onClick={() => setOpenForm(true)}>
+          Nouveau Projet
+        </Button>
+      </Box>
 
       {viewMode === "card" ? (
         <Grid container spacing={3} mt={2}>

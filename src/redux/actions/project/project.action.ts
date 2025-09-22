@@ -56,7 +56,7 @@ export const getAllProjects = () => async (dispatch: Dispatch) => {
   }
 };
 
-export const getPaginatedProjects = (page: number = 1, pageSize: number = 6) => async (dispatch: Dispatch) => {
+export const getPaginatedProjects = (page: number = 1, pageSize: number = 5) => async (dispatch: Dispatch) => {
   dispatch({ type: PROJECT_ACTION_TYPES.GET_PAGINATED_PROJECTS_REQUEST });
   
   try {
