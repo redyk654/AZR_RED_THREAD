@@ -49,6 +49,7 @@ export default function Dashboard() {
 
   const handleEditSubmit = async (data: UpdateProjectDto) => {
     try {
+      data.updatedBy = 1; // TODO: remplacer par l'ID de l'utilisateur connecté
       await dispatch(updateProject(data));
       setSnackbar({ open: true, message: "Projet mis à jour avec succès", severity: "success" });
       dispatch(getPaginatedProjects(page, pageSize)); // refresh liste
