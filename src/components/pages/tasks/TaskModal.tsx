@@ -27,50 +27,65 @@ export default function TaskModal({ open, projectId, projectName, onClose }: Tas
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
 
   // load tasks when modal opens or projectId changes
-  useEffect(() => {
-    if (open) {
-      dispatch(getTasksByProjectId(projectId)).catch((e: any) => {
-        setSnackbar({ open: true, message: e.message || "Erreur de chargement", severity: "error" });
-      });
-    }
-  }, [open, projectId, dispatch]);
+    useEffect(() => {
+        if (open) {
+        const fetchTasks = async () => {
+            const result = await dispatch(getTasksByProjectId(projectId) as any); 
+            if (result?.error) {
+            setSnackbar({
+                open: true,
+                message: result.message,
+                severity: "error"
+            });
+            }
+        };
+        fetchTasks();
+        }
+    }, [open, projectId, dispatch]);
 
-  const handleCreate = async (payload: CreateTaskDto) => {
-    try {
-      await dispatch(createTask(payload));
+    const handleCreate = async (payload: CreateTaskDto) => {
+      const result = await dispatch(createTask(payload));
+      if (result?.error) {
+        setSnackbar({
+          open: true,
+          message: result.message,
+          severity: "error"
+        });
+        return;
+      }
       // recharger la liste du projet
       await dispatch(getTasksByProjectId(projectId));
       setSnackbar({ open: true, message: "Tâche créée", severity: "success" });
-    } catch (err: any) {
-      setSnackbar({ open: true, message: err.message || "Erreur création", severity: "error" });
-      throw err;
-    }
-  };
+    };
 
-  const handleUpdate = async (payload: UpdateTaskDto) => {
-    try {
-      await dispatch(updateTask(payload));
-      // recharger la liste du projet
-      await dispatch(getTasksByProjectId(projectId));
-      setEditingTask(null);
-      setSnackbar({ open: true, message: "Tâche mise à jour", severity: "success" });
-    } catch (err: any) {
-      setSnackbar({ open: true, message: err.message || "Erreur mise à jour", severity: "error" });
-      throw err;
-    }
-  };
+    const handleUpdate = async (payload: UpdateTaskDto) => {
+        const result = await dispatch(updateTask(payload));
+        if (result?.error) {
+            setSnackbar({
+                open: true,
+                message: result.message,
+                severity: "error"
+            });
+            return;
+        }
+        // recharger la liste du projet
+        await dispatch(getTasksByProjectId(projectId));
+        setEditingTask(null);
+        setSnackbar({ open: true, message: "Tâche mise à jour", severity: "success" });
+    };
+    
 
   const handleDeleteConfirmed = async () => {
     if (!confirmDelete.id) return;
-    try {
-      await dispatch(deleteTask(confirmDelete.id));
-      setConfirmDelete({ open: false });
-      await dispatch(getTasksByProjectId(projectId));
-      setSnackbar({ open: true, message: "Tâche supprimée", severity: "success" });
-    } catch (err: any) {
-      setSnackbar({ open: true, message: err.message || "Erreur suppression", severity: "error" });
-    }
-  };
+      const result = await dispatch(deleteTask(confirmDelete.id));
+        if (result?.error) {
+            setSnackbar({ open: true, message: result.message, severity: "error" });
+            return;
+        }
+        setConfirmDelete({ open: false });
+        await dispatch(getTasksByProjectId(projectId));
+        setSnackbar({ open: true, message: "Tâche supprimée", severity: "success" });
+    };
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">

@@ -31,18 +31,32 @@ export default function Dashboard() {
   const pageSize = 4;
 
   useEffect(() => {
-    dispatch(getPaginatedProjects(page, pageSize));
+    const fetchProjects = async () => {
+      const result = await dispatch(getPaginatedProjects(page, pageSize) as any);
+      if (result?.error) {
+        setSnackbar({
+          open: true,
+          message: result.message,
+          severity: "error"
+        });
+      }
+    };
+    fetchProjects();
   }, [page]);
 
   const handleCreate = async (data: any) => {
-    try {
-      await dispatch(createProject(data));
-      setSnackbar({ open: true, message: "Projet créé avec succès", severity: "success" });
-      setOpenForm(false);
-      dispatch(getPaginatedProjects(page, pageSize));
-    } catch (err: any) {
-      setSnackbar({ open: true, message: err.message, severity: "error" });
+    const result = await dispatch(createProject(data));
+    if (result?.error) {
+      setSnackbar({
+        open: true,
+        message: result.message,
+        severity: "error"
+      });
+      return;
     }
+    setSnackbar({ open: true, message: "Projet créé avec succès", severity: "success" });
+    setOpenForm(false);
+    dispatch(getPaginatedProjects(page, pageSize));
   };
 
   const openTasks = (project: any) => setTaskModal({ open: true, projectId: project.id, projectName: project.name });
@@ -53,14 +67,18 @@ export default function Dashboard() {
   };
 
   const handleEditSubmit = async (data: UpdateProjectDto) => {
-    try {
-      data.updatedBy = 1; // TODO: remplacer par l'ID de l'utilisateur connecté
-      await dispatch(updateProject(data));
-      setSnackbar({ open: true, message: "Projet mis à jour avec succès", severity: "success" });
-      dispatch(getPaginatedProjects(page, pageSize)); // refresh liste
-    } catch (err: any) {
-      setSnackbar({ open: true, message: err.message, severity: "error" });
+    data.updatedBy = 1; // TODO: remplacer par l'ID de l'utilisateur connecté
+    const result = await dispatch(updateProject(data));
+    if (result?.error) {
+      setSnackbar({
+        open: true,
+        message: result.message,
+        severity: "error"
+      });
+      return;
     }
+    setSnackbar({ open: true, message: "Projet mis à jour avec succès", severity: "success" });
+    dispatch(getPaginatedProjects(page, pageSize)); // refresh liste
   };
 
   const handleOpenDelete = (id: number) => {
