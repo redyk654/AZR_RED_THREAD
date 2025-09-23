@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { TextField, Button, Box, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import { TextField, Button, Box, DialogTitle, DialogContent, DialogActions, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import { UpdateProjectDto } from "@/types/project.types";
 
 interface EditProjectFormProps {
@@ -24,7 +25,12 @@ export default function EditProjectForm({ initialData, onSubmit, onCancel }: Edi
 
   return (
     <Box component="form" onSubmit={handleSubmit}>
-      <DialogTitle>Modifier le projet</DialogTitle>
+        <DialogTitle>
+          Modifier le projet
+          <IconButton onClick={onCancel} sx={{ position: "absolute", right: 8, top: 8 }}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
       <DialogContent>
         <TextField
           fullWidth

@@ -11,7 +11,7 @@ export const PROJECT_ENDPOINTS = {
 
 export const TASK_ENDPOINTS = {
   GET_ALL: `${API_BASE_URL}/tasks`,
-  GET_BY_PROJECT: (projectId: number) => `${API_BASE_URL}/tasks/projectId/${projectId}`,
+  GET_BY_PROJECT: (projectId: number) => `${API_BASE_URL}/tasks/projectId?projectId=${projectId}`,
   CREATE: `${API_BASE_URL}/tasks`,
   UPDATE: (id: number) => `${API_BASE_URL}/tasks/${id}`,
   DELETE: (id: number) => `${API_BASE_URL}/tasks/${id}`,

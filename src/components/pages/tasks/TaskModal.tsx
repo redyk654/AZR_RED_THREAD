@@ -76,7 +76,8 @@ export default function TaskModal({ open, projectId, projectName, onClose }: Tas
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>
         Tâches — {projectName ?? `Projet #${projectId}`}
-        <IconButton onClick={onClose} sx={{ position: "absolute", right: 8, top: 8 }}>
+        {/* TODO: Bouton OnClose ne marche pas */}
+        <IconButton onClick={() => onClose()} sx={{ position: "absolute", right: 8, top: 8 }}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>

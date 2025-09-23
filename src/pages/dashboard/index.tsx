@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Grid, Pagination, Dialog, Box } from "@mui/material";
+import { Button, Grid, Pagination, Dialog, Box, DialogTitle, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import { getPaginatedProjects, createProject, updateProject, deleteProject } from "@/redux/actions/project/project.action";
 import ProjectCard from "@/components/pages/dashboard/ProjectCard";
 import ProjectTable from "@/components/pages/dashboard/ProjectTable";
@@ -134,6 +135,12 @@ export default function Dashboard() {
       />
 
       <Dialog open={openForm} onClose={() => setOpenForm(false)}>
+        <DialogTitle>
+          Créer un nouveau projet
+          <IconButton onClick={() => setOpenForm(false)} sx={{ position: "absolute", right: 8, top: 8 }}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
         <CreateProjectForm onSubmit={handleCreate} />
       </Dialog>
 

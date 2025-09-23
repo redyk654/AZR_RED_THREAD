@@ -13,7 +13,9 @@ import {
   InputLabel,
   Select,
   FormHelperText,
+  IconButton,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import type { CreateTaskDto } from "@/types/task.types";
 
 /**
@@ -88,7 +90,12 @@ export default function CreateTaskForm({ projectId, onSubmit, onCancel, initialV
 
   return (
     <Box component="form" onSubmit={handleSubmit}>
-      <DialogTitle>Créer une tâche</DialogTitle>
+      <DialogTitle>
+        Créer une tâche
+        <IconButton onClick={onCancel} sx={{ position: "absolute", right: 8, top: 8 }}>
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
 
       <DialogContent dividers>
         <TextField

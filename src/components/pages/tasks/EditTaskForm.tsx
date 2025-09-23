@@ -13,7 +13,10 @@ import {
   InputLabel,
   Select,
   FormHelperText,
+  IconButton,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+
 import type { UpdateTaskDto, Task } from "@/types/task.types";
 
 interface EditTaskFormProps {
@@ -49,6 +52,14 @@ export default function EditTaskForm({ initialData, onSubmit, onCancel }: EditTa
       if (ed < s) e.endDate = "La date de fin doit être postérieure à la date de début";
     }
 
+    // startDate >= today (création)
+    if (startDate) {
+      const s = new Date(startDate);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (s < today) e.startDate = "La date de début ne peut pas être dans le passé";
+    }
+
     // Pour l'édition on n'impose pas startDate >= today (optionnel)
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -73,7 +84,12 @@ export default function EditTaskForm({ initialData, onSubmit, onCancel }: EditTa
 
   return (
     <Box component="form" onSubmit={handleSubmit}>
-      <DialogTitle>Modifier la tâche</DialogTitle>
+      <DialogTitle>
+        Modifier la tâche
+        <IconButton onClick={onCancel} sx={{ position: "absolute", right: 8, top: 8 }}>
+            <CloseIcon />
+        </IconButton>
+      </DialogTitle>
 
       <DialogContent dividers>
         <TextField

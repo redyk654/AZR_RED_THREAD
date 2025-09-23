@@ -5,7 +5,6 @@ import {
   TextField,
   Button,
   Box,
-  Typography,
   Grid,
   Alert,
   Fade,
@@ -78,15 +77,6 @@ export default function CreateProjectForm({ onSubmit }: CreateProjectFormProps) 
         p: 3,
       }}
     >
-      <Typography
-        variant="h6"
-        component="h1"
-        gutterBottom
-        sx={{ color: "#1b365f", fontWeight: 500, textAlign: "center" }}
-      >
-        Nouveau Projet
-      </Typography>
-
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TextField
