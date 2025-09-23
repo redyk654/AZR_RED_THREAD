@@ -33,6 +33,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   onDelete,
   onViewTasks,
 }) => {
+  
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'À venir': return COLORS.WARNING;

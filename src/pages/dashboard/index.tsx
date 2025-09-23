@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Grid, Pagination, Dialog } from "@mui/material";
+import { Button, Grid, Pagination, Dialog, Box, DialogTitle, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import { getPaginatedProjects, createProject, updateProject, deleteProject } from "@/redux/actions/project/project.action";
 import ProjectCard from "@/components/pages/dashboard/ProjectCard";
 import ProjectTable from "@/components/pages/dashboard/ProjectTable";
@@ -10,7 +11,8 @@ import CreateProjectForm from "@/components/pages/projects/CreateProjectForm";
 import ModernSnackbar from "@/components/shared/ModernSnackbar";
 import { UpdateProjectDto } from "@/types/project.types";
 import EditProjectForm from "@/components/pages/projects/EditProjectForm";
-import DialogConfirmation from "@/components/pages/projects/DialogConfirmation";
+import DialogConfirmation from "@/components/shared/DialogConfirmation";
+import TaskModal from "@/components/pages/tasks/TaskModal";
 
 export default function Dashboard() {
   const dispatch = useDispatch<any>();
@@ -20,12 +22,13 @@ export default function Dashboard() {
   const [page, setPage] = useState(1);
   const [openForm, setOpenForm] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
-
+  
+  const [taskModal, setTaskModal] = useState({ open: false, projectId: null as number | null, projectName: "" });
   const [openEdit, setOpenEdit] = useState(false);
   const [editProject, setEditProject] = useState<UpdateProjectDto | null>(null);
   const [confirmDelete, setConfirmDelete] = useState({ open: false, projectId: 0 });
 
-  const pageSize = 2;
+  const pageSize = 4;
 
   useEffect(() => {
     dispatch(getPaginatedProjects(page, pageSize));
@@ -41,6 +44,8 @@ export default function Dashboard() {
       setSnackbar({ open: true, message: err.message, severity: "error" });
     }
   };
+
+  const openTasks = (project: any) => setTaskModal({ open: true, projectId: project.id, projectName: project.name });
 
   const handleOpenEdit = (project: UpdateProjectDto) => {
     setEditProject(project);
@@ -77,9 +82,11 @@ export default function Dashboard() {
   return (
     <div>
       <ProjectListSwitcher viewMode={viewMode} onChange={setViewMode} />
-      <Button sx={{ bgcolor: "#1b365f", color: "#fff", ml: 2 }} onClick={() => setOpenForm(true)}>
-        Nouveau Projet
-      </Button>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start', m: 2 }}>
+        <Button sx={{ bgcolor: "#1b365f", color: "#fff", ml: 2 }} onClick={() => setOpenForm(true)}>
+          Nouveau Projet
+        </Button>
+      </Box>
 
       {viewMode === "card" ? (
         <Grid container spacing={3} mt={2}>
@@ -89,7 +96,7 @@ export default function Dashboard() {
                 project={project}
                 onEdit={() => handleOpenEdit(project)}
                 onDelete={() => handleOpenDelete(project.id)}
-                onViewTasks={() => {}}
+                onViewTasks={() => openTasks(project)}
               />
             </Grid>
           ))}
@@ -99,7 +106,7 @@ export default function Dashboard() {
           projects={paginated.data}
           onEdit={handleOpenEdit}
           onDelete={handleConfirmDelete}
-          onViewTasks={() => {}}
+          onViewTasks={openTasks}
         />
       )}
 
@@ -128,8 +135,23 @@ export default function Dashboard() {
       />
 
       <Dialog open={openForm} onClose={() => setOpenForm(false)}>
+        <DialogTitle>
+          Créer un nouveau projet
+          <IconButton onClick={() => setOpenForm(false)} sx={{ position: "absolute", right: 8, top: 8 }}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
         <CreateProjectForm onSubmit={handleCreate} />
       </Dialog>
+
+      {taskModal.projectId && (
+        <TaskModal
+          open={taskModal.open}
+          projectId={taskModal.projectId}
+          projectName={taskModal.projectName}
+          onClose={() => setTaskModal({ open: false, projectId: null, projectName: "" })}
+        />
+      )}
 
       <ModernSnackbar
         open={snackbar.open}
