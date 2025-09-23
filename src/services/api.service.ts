@@ -1,7 +1,8 @@
 // src/services/api.service.ts
 import axios, { AxiosResponse } from 'axios';
-import { PROJECT_ENDPOINTS } from '@/utils/constants';
+import { PROJECT_ENDPOINTS, TASK_ENDPOINTS } from '@/utils/constants';
 import { Project, CreateProjectDto, UpdateProjectDto, PaginatedResult } from '@/types/project.types';
+import { CreateTaskDto, Task, UpdateTaskDto } from '@/types/task.types';
 
 // Configuration Axios avec intercepteurs
 const apiClient = axios.create({
@@ -56,5 +57,30 @@ export const projectApi = {
   // Supprimer un projet
   deleteProject: (id: number): Promise<AxiosResponse<void>> => {
     return apiClient.delete(PROJECT_ENDPOINTS.DELETE(id));
+  },
+};
+
+export const taskApi = {
+  // Récupérer toutes les tâches
+  getAllTasks: (): Promise<AxiosResponse<Task[]>> => {
+    return apiClient.get(TASK_ENDPOINTS.GET_ALL);
+  }
+  ,
+
+  // Récupérer les tâches d'un projet
+  getTasksByProjectId: (projectId: number): Promise<AxiosResponse<Task[]>> => {
+    return apiClient.get(TASK_ENDPOINTS.GET_BY_PROJECT(projectId));
+  },
+  // Créer une nouvelle tâche
+  createTask: (task: Omit<CreateTaskDto, 'id'>): Promise<AxiosResponse<Task>> => {
+    return apiClient.post(TASK_ENDPOINTS.CREATE, task);
+  },
+  // Mettre à jour une tâche
+  updateTask: (task: UpdateTaskDto): Promise<AxiosResponse<Task>> => {
+    return apiClient.put(TASK_ENDPOINTS.UPDATE(task.id), task);
+  },
+  // Supprimer une tâche
+  deleteTask: (id: number): Promise<AxiosResponse<void>> => {
+    return apiClient.delete(TASK_ENDPOINTS.DELETE(id));
   },
 };

@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import { projectReducer } from "@/redux/reducers/projectReducer";
+import { taskReducer } from "./reducers/taskReducer";
 
 const rootReducer = combineReducers({
   project: projectReducer,
+  task: taskReducer, // à ajouter
 });
 
 export const store = configureStore({

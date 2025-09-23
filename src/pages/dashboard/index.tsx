@@ -10,7 +10,8 @@ import CreateProjectForm from "@/components/pages/projects/CreateProjectForm";
 import ModernSnackbar from "@/components/shared/ModernSnackbar";
 import { UpdateProjectDto } from "@/types/project.types";
 import EditProjectForm from "@/components/pages/projects/EditProjectForm";
-import DialogConfirmation from "@/components/pages/projects/DialogConfirmation";
+import DialogConfirmation from "@/components/shared/DialogConfirmation";
+import TaskModal from "@/components/pages/tasks/TaskModal";
 
 export default function Dashboard() {
   const dispatch = useDispatch<any>();
@@ -20,7 +21,8 @@ export default function Dashboard() {
   const [page, setPage] = useState(1);
   const [openForm, setOpenForm] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
-
+  
+  const [taskModal, setTaskModal] = useState({ open: false, projectId: null as number | null, projectName: "" });
   const [openEdit, setOpenEdit] = useState(false);
   const [editProject, setEditProject] = useState<UpdateProjectDto | null>(null);
   const [confirmDelete, setConfirmDelete] = useState({ open: false, projectId: 0 });
@@ -41,6 +43,8 @@ export default function Dashboard() {
       setSnackbar({ open: true, message: err.message, severity: "error" });
     }
   };
+
+  const openTasks = (project: any) => setTaskModal({ open: true, projectId: project.id, projectName: project.name });
 
   const handleOpenEdit = (project: UpdateProjectDto) => {
     setEditProject(project);
@@ -91,7 +95,7 @@ export default function Dashboard() {
                 project={project}
                 onEdit={() => handleOpenEdit(project)}
                 onDelete={() => handleOpenDelete(project.id)}
-                onViewTasks={() => {}}
+                onViewTasks={() => openTasks(project)}
               />
             </Grid>
           ))}
@@ -101,7 +105,7 @@ export default function Dashboard() {
           projects={paginated.data}
           onEdit={handleOpenEdit}
           onDelete={handleConfirmDelete}
-          onViewTasks={() => {}}
+          onViewTasks={openTasks}
         />
       )}
 
@@ -132,6 +136,15 @@ export default function Dashboard() {
       <Dialog open={openForm} onClose={() => setOpenForm(false)}>
         <CreateProjectForm onSubmit={handleCreate} />
       </Dialog>
+
+      {taskModal.projectId && (
+        <TaskModal
+          open={taskModal.open}
+          projectId={taskModal.projectId}
+          projectName={taskModal.projectName}
+          onClose={() => setTaskModal({ open: false, projectId: null, projectName: "" })}
+        />
+      )}
 
       <ModernSnackbar
         open={snackbar.open}
