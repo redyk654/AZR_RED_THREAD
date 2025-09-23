@@ -7,6 +7,7 @@ import { PermissionProvider } from "@/utils/accesPermition/permissionContext";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store"; // adapte si ton store est ailleurs
 import { setupAxiosInterceptor } from "@/redux/config";
+import NavBar from "@/components/shared/navBar";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [initialized, setInitialized] = useState(false);
@@ -33,7 +34,10 @@ function MyApp({ Component, pageProps }: AppProps) {
       <AuthProvider>
         <PermissionProvider>
           <Provider store={store}>
-            <Component {...pageProps} />
+            <NavBar /> {/* Navbar partagée */}
+            <main style={{ padding: "20px" }}>
+              <Component {...pageProps} />
+            </main>
           </Provider>
         </PermissionProvider>
       </AuthProvider>

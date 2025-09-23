@@ -1,45 +1,27 @@
-// src/components/shared/navBar.tsx
+// src/components/shared/NavBar.tsx
 "use client";
 
 import React from "react";
-import { AppBar, Toolbar, Typography, Box, Button } from "@mui/material";
-import { useMsal } from "@azure/msal-react";
-import { msalInstance } from "@/utils/msalConfig";
+import { Button } from "@mui/material";
+import { useAuth } from "@/utils/protectedRoute";
 
-/**
- * Navbar qui affiche le nom de l'utilisateur et un bouton logout.
- * Utilise msalInstance pour logoutRedirect.
- */
-export default function NavBar({ userName, userEmail }: { userName?: string | null; userEmail?: string | null }) {
-  const { instance, accounts } = useMsal();
-  const account = accounts?.[0];
-
-  const handleLogout = async () => {
-    try {
-      await instance.logoutRedirect({
-        postLogoutRedirectUri: window.location.origin,
-      });
-    } catch (err) {
-      console.error("Logout error", err);
-    }
-  };
+export default function NavBar() {
+  const { isAuthenticated, login, logout } = useAuth();
 
   return (
-    <AppBar position="static" sx={{ bgcolor: "#1b365f" }}>
-      <Toolbar>
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          RED THREAD
-        </Typography>
-
-        <Box sx={{ textAlign: "right", mr: 2 }}>
-          <Typography variant="body2">{userName ?? account?.name ?? "Invité"}</Typography>
-          <Typography variant="caption" display="block">{userEmail ?? account?.username}</Typography>
-        </Box>
-
-        <Button color="inherit" onClick={handleLogout}>
-          Se déconnecter
-        </Button>
-      </Toolbar>
-    </AppBar>
+    <header style={{ background: "#1b365f", padding: "10px", color: "#fff" }}>
+      <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h3>RED THREAD</h3>
+        {isAuthenticated ? (
+          <Button onClick={logout} variant="contained" color="secondary">
+            Se déconnecter
+          </Button>
+        ) : (
+          <Button onClick={login} variant="contained" color="primary">
+            Se connecter
+          </Button>
+        )}
+      </nav>
+    </header>
   );
 }
