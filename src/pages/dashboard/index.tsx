@@ -109,7 +109,7 @@ export default function Dashboard() {
       {viewMode === "card" ? (
         <Grid container spacing={3} mt={2}>
           {paginated.data.map((project: any) => (
-            <Grid item xs={12} sm={6} md={4} key={project.id}>
+            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={project.id}>
               <ProjectCard
                 project={project}
                 onEdit={() => handleOpenEdit(project)}
