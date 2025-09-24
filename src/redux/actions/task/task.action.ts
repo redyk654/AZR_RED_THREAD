@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux';
 import { taskApi } from '@/services/api.service';;
 import { CreateTaskDto, UpdateTaskDto } from "@/types/task.types";
+import { generateErrorMessage } from '@/utils/functions';
 
 // Action types
 export const TASK_ACTION_TYPES = {
@@ -45,12 +46,14 @@ export const getAllTasks = () => async (dispatch: Dispatch) => {
         });
         return response.data;
     } catch (error: any) {
-        const errorMessage = error.response?.data?.message || error.message || 'Erreur lors du chargement des tâches';
+        const errorMessage = generateErrorMessage(error);
+
         dispatch({
             type: TASK_ACTION_TYPES.GET_ALL_TASKS_FAILURE,
             error: errorMessage
         });
-        throw error;
+
+        return { error: true, message: errorMessage };
     }
 };
 
@@ -64,12 +67,14 @@ export const getTasksByProjectId = (projectId: number) => async (dispatch: Dispa
         });
         return response.data;
     } catch (error: any) {
-        const errorMessage = error.response?.data?.message || error.message || 'Erreur lors du chargement des tâches du projet';
+        const errorMessage = generateErrorMessage(error);
+
         dispatch({
             type: TASK_ACTION_TYPES.GET_TASKS_BY_PROJECT_FAILURE,
             error: errorMessage
         });
-        throw error;
+
+        return { error: true, message: errorMessage };
     }
 };
 
@@ -83,12 +88,14 @@ export const createTask = (task: CreateTaskDto) => async (dispatch: Dispatch) =>
         });
         return response.data;
     } catch (error: any) {
-        const errorMessage = error.response?.data?.message || error.message || 'Erreur lors de la création de la tâche';
+        const errorMessage = generateErrorMessage(error);
+
         dispatch({
             type: TASK_ACTION_TYPES.CREATE_TASK_FAILURE,
             error: errorMessage
         });
-        throw error;
+
+        return { error: true, message: errorMessage };
     }
 };
 
@@ -102,12 +109,14 @@ export const updateTask = (task: UpdateTaskDto) => async (dispatch: Dispatch) =>
         });
         return response.data;
     } catch (error: any) {
-        const errorMessage = error.response?.data?.message || error.message || 'Erreur lors de la mise à jour de la tâche';
+        const errorMessage = generateErrorMessage(error);
+        
         dispatch({
             type: TASK_ACTION_TYPES.UPDATE_TASK_FAILURE,
             error: errorMessage
         });
-        throw error;
+
+        return { error: true, message: errorMessage };
     }
 };
 
@@ -120,11 +129,13 @@ export const deleteTask = (id: number) => async (dispatch: Dispatch) => {
             payload: id
         });
     } catch (error: any) {
-        const errorMessage = error.response?.data?.message || error.message || 'Erreur lors de la suppression de la tâche';
+        const errorMessage = generateErrorMessage(error);
+
         dispatch({
             type: TASK_ACTION_TYPES.DELETE_TASK_FAILURE,
             error: errorMessage
         });
-        throw error;
+        
+        return { error: true, message: errorMessage };
     }
 };

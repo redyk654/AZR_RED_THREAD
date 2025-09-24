@@ -2,6 +2,12 @@
 import { Dispatch } from 'redux';
 import { projectApi } from '@/services/api.service';
 import { CreateProjectDto, UpdateProjectDto } from '@/types/project.types';
+import { generateErrorMessage } from '@/utils/functions';
+
+interface ErrorResponse {
+  error: boolean;
+  errorMessage: string;
+}
 
 // Types d'actions
 export const PROJECT_ACTION_TYPES = {
@@ -47,12 +53,14 @@ export const getAllProjects = () => async (dispatch: Dispatch) => {
     });
     return response.data;
   } catch (error: any) {
-    const errorMessage = error.response?.data?.message || error.message || 'Erreur lors du chargement des projets';
+    const errorMessage = generateErrorMessage(error);
+
     dispatch({
       type: PROJECT_ACTION_TYPES.GET_ALL_PROJECTS_FAILURE,
       error: errorMessage
     });
-    throw error;
+
+    return { error: true, message: errorMessage };
   }
 };
 
@@ -67,12 +75,14 @@ export const getPaginatedProjects = (page: number = 1, pageSize: number = 5) => 
     });
     return response.data;
   } catch (error: any) {
-    const errorMessage = error.response?.data?.message || error.message || 'Erreur lors du chargement des projets';
+    const errorMessage = generateErrorMessage(error);
+
     dispatch({
       type: PROJECT_ACTION_TYPES.GET_PAGINATED_PROJECTS_FAILURE,
       error: errorMessage
     });
-    throw error;
+
+    return { error: true, message: errorMessage };
   }
 };
 
@@ -87,12 +97,14 @@ export const createProject = (project: CreateProjectDto) => async (dispatch: Dis
     });
     return response.data;
   } catch (error: any) {
-    const errorMessage = error.response?.data?.message || error.message || 'Erreur lors de la création du projet';
+    const errorMessage = generateErrorMessage(error);
+    
     dispatch({
       type: PROJECT_ACTION_TYPES.CREATE_PROJECT_FAILURE,
       error: errorMessage
     });
-    throw error;
+    
+    return { error: true, message: errorMessage };
   }
 };
 
@@ -107,12 +119,13 @@ export const updateProject = (project: UpdateProjectDto) => async (dispatch: Dis
     });
     return response.data;
   } catch (error: any) {
-    const errorMessage = error.response?.data?.message || error.message || 'Erreur lors de la mise à jour du projet';
+    const errorMessage = generateErrorMessage(error);
     dispatch({
       type: PROJECT_ACTION_TYPES.UPDATE_PROJECT_FAILURE,
       error: errorMessage
     });
-    throw error;
+    
+    return { error: true, message: errorMessage };
   }
 };
 
@@ -127,12 +140,14 @@ export const deleteProject = (id: number) => async (dispatch: Dispatch) => {
     });
     return true;
   } catch (error: any) {
-    const errorMessage = error.response?.data?.message || error.message || 'Erreur lors de la suppression du projet';
+    const errorMessage = generateErrorMessage(error);
+
     dispatch({
       type: PROJECT_ACTION_TYPES.DELETE_PROJECT_FAILURE,
       error: errorMessage
     });
-    throw error;
+
+    return { error: true, message: errorMessage };
   }
 };
 

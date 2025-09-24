@@ -34,6 +34,7 @@ export default function CreateProjectForm({ onSubmit }: CreateProjectFormProps) 
     description: "",
     startDate: "",
     endDate: "",
+    createdBy: 1, // À remplir côté serveur si besoin
   });
   const [errors, setErrors] = useState<FormErrors>({});
 
@@ -78,7 +79,7 @@ export default function CreateProjectForm({ onSubmit }: CreateProjectFormProps) 
       }}
     >
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <TextField
             fullWidth
             name="name"
@@ -93,7 +94,7 @@ export default function CreateProjectForm({ onSubmit }: CreateProjectFormProps) 
           />
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <TextField
             fullWidth
             name="description"
@@ -110,13 +111,12 @@ export default function CreateProjectForm({ onSubmit }: CreateProjectFormProps) 
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <TextField
             fullWidth
             name="startDate"
             type="date"
             label="Date de début"
-            InputLabelProps={{ shrink: true }}
             value={form.startDate}
             onChange={handleChange}
             error={!!errors.startDate}
@@ -129,13 +129,12 @@ export default function CreateProjectForm({ onSubmit }: CreateProjectFormProps) 
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <TextField
             fullWidth
             name="endDate"
             type="date"
             label="Date de fin"
-            InputLabelProps={{ shrink: true }}
             value={form.endDate}
             onChange={handleChange}
             error={!!errors.endDate}
@@ -147,7 +146,7 @@ export default function CreateProjectForm({ onSubmit }: CreateProjectFormProps) 
         </Grid>
 
         {Object.keys(errors).length > 0 && (
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <Fade in>
               <Alert severity="error" sx={{ fontSize: "0.9rem" }}>
                 Veuillez corriger les erreurs avant de soumettre le formulaire.
@@ -156,7 +155,7 @@ export default function CreateProjectForm({ onSubmit }: CreateProjectFormProps) 
           </Grid>
         )}
 
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <Button
             type="submit"
             fullWidth
